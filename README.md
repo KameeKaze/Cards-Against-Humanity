@@ -5,7 +5,7 @@ Clone the repository
 `https://github.com/Keshoki/Cards-Against-Humanity.git`  
 ### !IMPORTANT!
 You need to be the same directory with the script because of the wordlists.
-=======
+
 # Cards-Against-Humanity
 ### A party game for horrible people
 To build it

@@ -12,17 +12,16 @@ async def on_ready():
     
 
 ## Cards
-blacks = [x.replace("\n","") for x in  open("/home/kamee/cardsagainsthumanity/black.txt").readlines()]
-whites = [x.replace("\n","") for x in  open("/home/kamee/cardsagainsthumanity/white.txt").readlines()]
+blacks = [x.replace("\n","") for x in  open("./black.txt").readlines()]
+whites = [x.replace("\n","") for x in  open("./white.txt").readlines()]
 
-users = []
+userlist = []
 card_numer = 5
-turns = 10
 
 
 class User:
     def __init__(self,cards,name,user):
-        self.cards=cards
+        self.cards = cards
         self.name = name
         self.user = user
         for x in self.cards:
@@ -33,26 +32,38 @@ class User:
 # join to game
 @bot.command()
 async def join(ctx):   
-
     author=ctx.author
+    userlist.append(User(choices(whites,k=card_numer),author.name,author))
 
-    users.append(User(choices(whites,k=card_numer),author.name,author))
-
-    cards = users[-1].cards
+    cards = userlist[-1].cards
     await author.send("Here are your cards:\n\n"+"\n".join(cards))
 
-@bot.command()
-async def start(ctx):
-    print(choice(list(x.name for x in users)))
 
 
+#list the cards of the user
 @bot.command()
 async def cards(ctx):
-    await users[0].user.send("\n".join(users[0].cards))
+    await userlist[0].user.send("\n".join(userlist[0].cards))
 
+# list all users in the game
 @bot.command()
-async def userlist(ctx):
-    await ctx.author.send("\n".join(x.name for x in users))
+async def users(ctx):
+    await ctx.author.send("\n".join(x.name for x in userlist))
+
+
+#start the game
+@bot.command()
+async def start(ctx):
+    black_card = choice(blacks)
+    print(black_card)
+    for user in userlist:
+        await user.user.send(black_card)
+        await user.user.send("Your cards:\n\n")
+        for n,card in enumerate(user.cards):
+            await user.user.send(f"[{n}] {card}")
+
+
+
 
 
 

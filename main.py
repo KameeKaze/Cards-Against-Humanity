@@ -10,7 +10,6 @@ bot.remove_command('help') # own help menu near to the end
 @bot.event
 async def on_ready():
     print("I'm ready!")
-    
 
 ## Cards
 blacks = [x.replace("\n","") for x in  open("./black.txt").readlines()]
@@ -53,7 +52,6 @@ async def join(ctx):
     embed.set_footer(text="CAH", icon_url=icon)
     await author.send(embed=embed)
 
-
 #list your cards
 @bot.command()
 async def cards(ctx):
@@ -88,7 +86,6 @@ async def help(ctx):
     embed.add_field(name=">ping", value="Checks the ping")
     embed.set_footer(text="CAH", icon_url=icon) 
     await ctx.author.send(embed=embed)
-
 
 #start the game
 @bot.command()

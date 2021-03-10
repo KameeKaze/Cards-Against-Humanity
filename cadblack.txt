@@ -1,0 +1,61 @@
+"But online I read that ____."
+11 reasons to ____. Nr 5 will surprise you.
+9gags most upvoted post is ____.
+After successfully selling my company I now ____.
+After ten years working as a developer, I am addicted to ____.
+As a hobby project I ____.
+Customer always complain about ____ in our software.
+Deploying my application in ____.
+Excel should be used for ____ more often.
+Fixing bugs by ____.
+For relaxing I do ____.
+High quality software is made with ____
+I am using ____ for my monolith.
+I asked my boss for a raise due to ____.
+I declined the pull request because of ____.
+I destroyed ____ by ____.
+I don't get laid because of ____.
+I don't get paid because of ____.
+I don't need backups, I have ____.
+I filed a bug on ____.
+I had a problem with ____ and solved it by ____.
+I integrated ____ into my DevSecOps pipeline.
+I like to get drunk and ____.
+I like to turn up to investor meetings ____.
+I spent my last salary on ____.
+I successfully tested ____.
+I switched to Linux because of ____.
+I would sell my shares of the company for ____.
+Last deployment failed because of ____.
+Last time I went outside, I experienced ____.
+Last year North Korea spent 10 million on ____.
+My Cloud Drive won't sync because of ____.
+My alternative to the gym is ____.
+My co-worker files a complaint because of ____.
+My currently relationship status is ____ because of ____.
+My job feels like ____.
+My morning toilet session can be explained as ____.
+My security is so good, it ____.
+On my GitHub profile you will find ____.
+On our Offsite we did ____.
+Our USP is ____.
+Our systems for ____ runs only on raspberry pies.
+Software development is like ____.
+The 11-star user experience is ____.
+The booth is themed ____.
+The customer requests ____.
+The difference between RSA and DSA is ____.
+The documentation says you should ____, but to make it work you need to ____.
+The new marketing campaign for April 1st will be ____.
+The next blog article will be about ____.
+The next superior cloud service will use ____.
+There still is a bug in ____.
+This year's marketing motto is ____.
+We use ____ for quality control.
+When the marketing intern asks: "Can you please change ____ on the website"
+When the sales guys are laughing in their office they are ____.
+Yesterday Bill Gates asked me ____
+____ as a Service
+____ makes the CEO happy.
+____. How did this ever work?
+____. Oh, this was earlier than expected.

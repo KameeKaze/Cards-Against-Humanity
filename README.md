@@ -1,5 +1,5 @@
 # Cards-Against-Humanity  
-##### A party game for horrible people
+### A party game for horrible people
 
 ## Installation  
 Clone the repository   

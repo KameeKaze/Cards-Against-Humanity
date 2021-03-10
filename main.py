@@ -18,7 +18,7 @@ whites = [x.replace("\n","") for x in  open("./white.txt").readlines()]
 
 userlist = []
 card_numer = 5
-
+icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_Humanity_logo.png/220px-Cards_Against_Humanity_logo.png"
 
 class User:
     def __init__(self,cards,name,user):
@@ -28,17 +28,17 @@ class User:
         for x in self.cards:
             whites.remove(x)
             
-#pinging a bot
+#bot pings
 @bot.command(aliases = ["p"])
 async def ping(ctx):
     ping_ = bot.latency
     ping =  round(ping_ * 1000)
     embed = discord.Embed(title="Ping", value=f"{ping}", color=discord.Color.red())
     embed.add_field(name=f"{ping}", value="ms")
-    embed.set_footer(text="CAH", icon_url="https://wolfyfiles.000webhostapp.com/home/discord/cah.jpg")
+    embed.set_footer(text="CAH", icon_url=icon)
     await ctx.send(embed=embed)
 
-# join to game
+#join to the game
 @bot.command()
 async def join(ctx):   
     author=ctx.author
@@ -48,24 +48,23 @@ async def join(ctx):
     #await author.send("Here are your cards:\n\n"+"\n".join(cards))
 
     cardlist = "\n".join(cards) 
-    embed = discord.Embed(title="Üdvözöllek a játékban", color=discord.Color.blue())
-    embed.add_field(name = 'Kártyáid:', value=cardlist, inline = True)
-    embed.set_footer(text="CAH", icon_url="https://wolfyfiles.000webhostapp.com/home/discord/cah.jpg")
+    embed = discord.Embed(title="Wellcome to the game", color=discord.Color.blue())
+    embed.add_field(name = 'Your cards:', value=cardlist, inline = True)
+    embed.set_footer(text="CAH", icon_url=icon)
     await author.send(embed=embed)
 
-#list the cards of the user
 
-
-
-#list the cards of the user
+#list your cards
 @bot.command()
 async def cards(ctx):
-    #await userlist[0].user.send("\n".join(userlist[0].cards))
+    for user in userlist:
+        if ctx.author.name == user.name:
+            break
 
-    cardlist = "\n".join(userlist[0].cards)
+    cardlist = "\n".join(user.cards)
     embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.green())
-    embed.add_field(name = 'Kártyáid:', value=cardlist, inline = True)
-    embed.set_footer(text="CAH", icon_url="https://wolfyfiles.000webhostapp.com/home/discord/cah.jpg")
+    embed.add_field(name = 'Your cards:', value=cardlist, inline = True)
+    embed.set_footer(text="CAH", icon_url=icon)
     await ctx.author.send(embed=embed)
 
 # list all users in the game
@@ -75,19 +74,19 @@ async def users(ctx):
 
     userl="\n".join(x.name for x in userlist)
     embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.orange())
-    embed.add_field(name = 'jelenlegi játékosok:', value=userl, inline = True)
-    embed.set_footer(text="CAH", icon_url="https://wolfyfiles.000webhostapp.com/home/discord/cah.jpg")
+    embed.add_field(name = 'Users in game:', value=userl, inline = True)
+    embed.set_footer(text="CAH", icon_url=icon)
     await ctx.author.send(embed=embed)
 
 @bot.command(aliases = ["h"])
 async def help(ctx):
-    embed = discord.Embed(title="Segítség", color=discord.Color.green())
-    embed.add_field(name=">help", value="Help menü")
-    embed.add_field(name=">join", value="Belépés a játékbai")
-    embed.add_field(name=">cards", value="Jelenlegi kártyáid")
-    embed.add_field(name=">users", value="Játékban levő játékosok")
-    embed.add_field(name=">ping", value="Ping ellenörzés")
-    embed.set_footer(text="CAH", icon_url="https://wolfyfiles.000webhostapp.com/home/discord/cah.jpg") 
+    embed = discord.Embed(title="Help", color=discord.Color.green())
+    embed.add_field(name=">help", value="Give this help list")
+    embed.add_field(name=">join", value="Join to the game")
+    embed.add_field(name=">cards", value="Your current cards")
+    embed.add_field(name=">users", value="Users in game")
+    embed.add_field(name=">ping", value="Checks the ping")
+    embed.set_footer(text="CAH", icon_url=icon) 
     await ctx.author.send(embed=embed)
 
 

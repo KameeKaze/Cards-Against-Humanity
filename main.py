@@ -102,4 +102,4 @@ async def start(ctx):
         for n,card in enumerate(user.cards):
             await user.user.send(f"[{n}] {card}")
 
-bot.run("ODE5Mjc2NTUxODI4NjY4NDc2.YEkQvw.R4N5BceHHkG0DiKRdA5Dg_adtiE")
+bot.run("")

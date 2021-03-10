@@ -4,7 +4,7 @@
 ## Installation  
 Clone the repository   
 `https://github.com/Keshoki/Cards-Against-Humanity.git`  
-### !IMPORTANT!
+### IMPORTANT
 You need to be in the same directory with the script because of the wordlists.
 
 ## Use With Docker  

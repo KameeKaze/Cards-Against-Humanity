@@ -68,8 +68,6 @@ async def cards(ctx):
 # list all users in the game
 @bot.command()
 async def users(ctx):
-    #await ctx.author.send("\n".join(x.name for x in userlist))
-
     userl="\n".join(x.name for x in userlist)
     embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.orange())
     embed.add_field(name = 'Users in game:', value=userl, inline = True)
@@ -91,11 +89,14 @@ async def help(ctx):
 @bot.command()
 async def start(ctx):
     black_card = choice(blacks)
-    print(black_card)
+    blacks.remove(black_card)
     for user in userlist:
-        await user.user.send(black_card)
-        await user.user.send("Your cards:\n\n")
-        for n,card in enumerate(user.cards):
-            await user.user.send(f"[{n}] {card}")
+        embed = discord.Embed(title=black_card,color=discord.Color.blurple())
+    
+        for n,card in enumerate(user.cards):            
+            embed.add_field(name=n+1,value=card)
+        
+        await user.user.send(embed=embed)
+        
 
-bot.run("")
+bot.run("ODE5MTUzOTU2NDgzNDk4MDU0.YEiekg.u4MWVVkj8a2cJpDfpOz0jgZpzvE")

@@ -41,19 +41,25 @@ async def ping(ctx):
 
 #join to the game
 @bot.command()
-async def join(ctx):   
-    # create new user
+async def join(ctx):
     author=ctx.author
-    userlist.append(User(choices(whites,k=card_numer),author.name,author))
 
+    # check if user already joined
+    if all([x.user != author for x in userlist]):
+        # create new user
+        userlist.append(User(choices(whites,k=card_numer),author.name,author))
 
-    cards = "\n".join(userlist[-1].cards) # get the new user's cards
+        # get the new user's cards
+        cards = "\n".join(userlist[-1].cards) 
 
-    # send join message and cards
-    embed = discord.Embed(title="Wellcome to the game", color=discord.Color.gold())
-    embed.add_field(name = 'Your cards:', value=cards, inline=True)
-    embed.set_footer(text="CAH", icon_url=icon)
-    await author.send(embed=embed)
+        # send join message and cards
+        embed = discord.Embed(title="Wellcome to the game", color=discord.Color.gold())
+        embed.add_field(name = 'Your cards:', value=cards, inline=True)
+        embed.set_footer(text="CAH", icon_url=icon)
+        await author.send(embed=embed)
+
+    #error if user already joined
+    else:await author.send(embed=discord.Embed(title="You've already joined to the game", color=discord.Color.red()))
 
 #list your cards
 @bot.command()

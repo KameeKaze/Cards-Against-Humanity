@@ -102,12 +102,11 @@ async def start(ctx):
     #draw a black card
     black_card = choice(blacks)
     blacks.remove(black_card)
+    author=ctx.author
     #enumerate users
-    for user in userlist:
+    if any([x.user == author for x in userlist]):
+        for user in userlist:
 
-        author=ctx.author
-        # user isn't joined
-        if any([x.user == author for x in userlist]):
             embed = discord.Embed(title=black_card,color=discord.Color.gold())
             #enumerate user's cards
             for n,card in enumerate(user.cards):            
@@ -122,8 +121,8 @@ async def start(ctx):
                 await msg.add_reaction(emoji)
         
         #if user already joined
-        else:
-            await user.user.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
+    else:
+        await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
     
         ##todo check for added reaction by user
 

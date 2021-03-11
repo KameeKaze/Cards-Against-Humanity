@@ -40,7 +40,7 @@ async def ping(ctx):
     await ctx.send(embed=embed)
 
 #join to the game
-@bot.command()
+@bot.command(aliases = ["j"])
 async def join(ctx):
     author=ctx.author
 
@@ -62,7 +62,7 @@ async def join(ctx):
     else:await author.send(embed=discord.Embed(title="You've already joined to the game", color=discord.Color.red()))
 
 #list your cards
-@bot.command()
+@bot.command(aliases = ["card", "c"])
 async def cards(ctx):
     # get the user
     for user in userlist:
@@ -76,7 +76,7 @@ async def cards(ctx):
     await ctx.author.send(embed=embed)
 
 # list all users in the game
-@bot.command()
+@bot.command(aliases = ["user", "u"])
 async def users(ctx):
     userl="\n".join(x.name for x in userlist)
     embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
@@ -97,37 +97,40 @@ async def help(ctx):
     await ctx.author.send(embed=embed)
 
 #start the game
-@bot.command()
+@bot.command(aliases = ["s"])
 async def start(ctx):
     #draw a black card
     black_card = choice(blacks)
     blacks.remove(black_card)
     #enumerate users
     for user in userlist:
-        embed = discord.Embed(title=black_card,color=discord.Color.gold())
-    #enumerate user's cards
-        for n,card in enumerate(user.cards):            
-            embed.add_field(name=f"[{n+1}]",value=card, inline=False)
 
-    #send black cards and user's cards
-        embed.set_footer(text="CAH", icon_url=icon)
-        msg = await user.user.send(embed=embed)
+        author=ctx.author
+        # user isn't joined
+        if any([x.user == author for x in userlist]):
+            embed = discord.Embed(title=black_card,color=discord.Color.gold())
+            #enumerate user's cards
+            for n,card in enumerate(user.cards):            
+                embed.add_field(name=f"[{n+1}]",value=card, inline=False)
+
+            #send black cards and user's cards
+            embed.set_footer(text="CAH", icon_url=icon)
+            msg = await user.user.send(embed=embed)
         
-        #add emojies
-        for emoji in reactions:
-            await msg.add_reaction(emoji)
-
+            #add emojies
+            for emoji in reactions:
+                await msg.add_reaction(emoji)
+        
+        #if user already joined
+        else:
+            await user.user.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
+    
         ##todo check for added reaction by user
 
-    
-
-
-
-        
 #todo later
 @bot.command()
 async def scoreboard(ctx):
     pass 
 #todo later
 
-bot.run("")
+bot.run("ODE5Mjc2NTUxODI4NjY4NDc2.YEkQvw.efrQc4CgHM_P9lyfqVmQZ1E3iAo")

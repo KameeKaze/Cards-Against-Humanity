@@ -1,6 +1,7 @@
 #/bin/python3
 import discord
 from discord.ext import commands
+from discord.utils import get
 from random import choices
 from random import choice
 
@@ -17,6 +18,7 @@ whites = [x.replace("\n","") for x in  open("./white.txt").readlines()]
 
 userlist = []
 card_numer = 5
+reactions = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣"] # if you wanna play with more cards, add the emojies
 icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_Humanity_logo.png/220px-Cards_Against_Humanity_logo.png"
 
 class User:
@@ -100,9 +102,26 @@ async def start(ctx):
     #enumerate user's cards
         for n,card in enumerate(user.cards):            
             embed.add_field(name=f"[{n+1}]",value=card, inline=False)
+
     #send black cards and user's cards
         embed.set_footer(text="CAH", icon_url=icon)
-        await user.user.send(embed=embed)
+        msg = await user.user.send(embed=embed)
         
+        #add emojies
+        for emoji in reactions:
+            await msg.add_reaction(emoji)
+
+        ##todo check for added reaction by user
+
+    
+
+
+
+        
+#todo later
+@bot.command()
+async def scoreboard(ctx):
+    pass 
+#todo later
 
 bot.run("")

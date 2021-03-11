@@ -133,4 +133,4 @@ async def scoreboard(ctx):
     pass 
 #todo later
 
-bot.run("ODE5Mjc2NTUxODI4NjY4NDc2.YEkQvw.efrQc4CgHM_P9lyfqVmQZ1E3iAo")
+bot.run("")

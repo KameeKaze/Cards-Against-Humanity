@@ -11,7 +11,7 @@ bot.remove_command('help') # own help menu near to the end
 async def on_ready():
     print("I'm ready!")
 
-## Cards
+## import cards
 blacks = [x.replace("\n","") for x in  open("./black.txt").readlines()]
 whites = [x.replace("\n","") for x in  open("./white.txt").readlines()]
 
@@ -32,7 +32,7 @@ class User:
 async def ping(ctx):
     ping_ = bot.latency
     ping =  round(ping_ * 1000)
-    embed = discord.Embed(title="Ping", value=f"{ping}", color=discord.Color.red())
+    embed = discord.Embed(title="Ping", value=f"{ping}", color=discord.Color.gold())
     embed.add_field(name=f"{ping}", value="ms")
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.send(embed=embed)
@@ -40,28 +40,30 @@ async def ping(ctx):
 #join to the game
 @bot.command()
 async def join(ctx):   
+    # create new user
     author=ctx.author
     userlist.append(User(choices(whites,k=card_numer),author.name,author))
 
-    cards = userlist[-1].cards
-    #await author.send("Here are your cards:\n\n"+"\n".join(cards))
 
-    cardlist = "\n".join(cards) 
-    embed = discord.Embed(title="Wellcome to the game", color=discord.Color.blue())
-    embed.add_field(name = 'Your cards:', value=cardlist, inline = True)
+    cards = "\n".join(userlist[-1].cards) # get the new user's cards
+
+    # send join message and cards
+    embed = discord.Embed(title="Wellcome to the game", color=discord.Color.gold())
+    embed.add_field(name = 'Your cards:', value=cards, inline = True)
     embed.set_footer(text="CAH", icon_url=icon)
     await author.send(embed=embed)
 
 #list your cards
 @bot.command()
 async def cards(ctx):
+    # get the user
     for user in userlist:
         if ctx.author.name == user.name:
             break
-
-    cardlist = "\n".join(user.cards)
-    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.green())
-    embed.add_field(name = 'Your cards:', value=cardlist, inline = True)
+    # get the user's cards and send
+    cards = "\n".join(user.cards)
+    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+    embed.add_field(name = 'Your cards:', value=cards, inline = True)
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.author.send(embed=embed)
 
@@ -69,14 +71,15 @@ async def cards(ctx):
 @bot.command()
 async def users(ctx):
     userl="\n".join(x.name for x in userlist)
-    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.orange())
+    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
     embed.add_field(name = 'Users in game:', value=userl, inline = True)
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.author.send(embed=embed)
 
+#help menu
 @bot.command(aliases = ["h"])
 async def help(ctx):
-    embed = discord.Embed(title="Help", color=discord.Color.green())
+    embed = discord.Embed(title="Help", color=discord.Color.gold())
     embed.add_field(name=">help", value="Give this help list")
     embed.add_field(name=">join", value="Join to the game")
     embed.add_field(name=">cards", value="Your current cards")
@@ -88,15 +91,18 @@ async def help(ctx):
 #start the game
 @bot.command()
 async def start(ctx):
+    #draw a black card
     black_card = choice(blacks)
     blacks.remove(black_card)
+    #enumerate users
     for user in userlist:
-        embed = discord.Embed(title=black_card,color=discord.Color.blurple())
-    
+        embed = discord.Embed(title=black_card,color=discord.Color.gold())
+    #enumerate user's cards
         for n,card in enumerate(user.cards):            
             embed.add_field(name=n+1,value=card)
-        
+    #send black cards and user's cards
+        embed.set_footer(text="CAH", icon_url=icon)
         await user.user.send(embed=embed)
         
 
-bot.run("ODE5MTUzOTU2NDgzNDk4MDU0.YEiekg.u4MWVVkj8a2cJpDfpOz0jgZpzvE")
+bot.run("")

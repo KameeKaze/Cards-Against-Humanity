@@ -2,6 +2,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
+import asyncio
 from random import choices
 from random import choice
 
@@ -96,15 +97,23 @@ async def help(ctx):
     embed.set_footer(text="CAH", icon_url=icon) 
     await ctx.author.send(embed=embed)
 
+
+
+
 #start the game
 @bot.command(aliases = ["s"])
 async def start(ctx):
+    def check(reaction, user):
+        print(str(reaction.emoji)+reactions[0],user)
+        return str(reaction.emoji) == reactions[0]
+
     #draw a black card
     black_card = choice(blacks)
     blacks.remove(black_card)
     author=ctx.author
-    #enumerate users
+    #chec if user joined
     if any([x.user == author for x in userlist]):
+        #enumerate users
         for user in userlist:
 
             embed = discord.Embed(title=black_card,color=discord.Color.gold())
@@ -119,12 +128,22 @@ async def start(ctx):
             #add emojies
             for emoji in reactions:
                 await msg.add_reaction(emoji)
+            ##get reaction
+            await asyncio.sleep(5)
+            msg = await msg.channel.fetch_message(msg.id)
+            msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
+            maxifaszi = max(msg_reactions,key=msg_reactions.get)
+            print(maxifaszi)
+            
+
+            
         
-        #if user already joined
-    else:
-        await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
+    else:await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
     
         ##todo check for added reaction by user
+
+
+        
 
 #todo later
 @bot.command()

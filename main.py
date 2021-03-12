@@ -24,6 +24,7 @@ icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_
 
 class User:
     score = 0
+    current_card= None
     def __init__(self,cards,name,user):
         self.cards = cards
         self.name = name
@@ -131,13 +132,17 @@ async def start(ctx):
             messages.append(msg)
         #wait for users
         await asyncio.sleep(5)
-
+        answers=[]
         #chech user personal vote
-        for msg in messages:
+        for n,msg in enumerate(messages):
             msg = await msg.channel.fetch_message(msg.id)
             msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
             msgreact = max(msg_reactions,key=msg_reactions.get)
-            print(msgreact)
+            user= userlist[n]
+            user.current_card=user.cards[list(msg_reactions).index(msgreact)]
+            answers.append(black_card.replace('____',user.current_card))
+        for user in userlist:
+            await user.user.send(answers)
 
     else:await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
     

@@ -12,7 +12,7 @@ To build it
 `sudo docker build -t cah .`  
 
 To run the container  
-`sudo docker run cah`  
+`sudo docker run --name=cahapp -it cah`  
 
 ## Use Without Docker  
 First you need to install the discord moduli in python  

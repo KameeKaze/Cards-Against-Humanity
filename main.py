@@ -23,10 +23,11 @@ reactions = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣"] # if you wanna p
 icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_Humanity_logo.png/220px-Cards_Against_Humanity_logo.png"
 
 class User:
-    def __init__(self,cards,name,user):
+    def __init__(self,cards,name,user,score):
         self.cards = cards
         self.name = name
         self.user = user
+        self.score = 0
         for x in self.cards:
             whites.remove(x)
             
@@ -148,4 +149,4 @@ async def scoreboard(ctx):
     pass 
 #todo later
 
-bot.run("ODE5Mjc2NTUxODI4NjY4NDc2.YEkQvw.EL7fScmsdRRE8e-Oi8SuI7Sy7ds")
+bot.run("ODE5Mjc2NTUxODI4NjY4NDc2.YEkQvw.d11xIV8ykQ4E_JxS9I6us_M0wOk")

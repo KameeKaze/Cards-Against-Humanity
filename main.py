@@ -32,7 +32,7 @@ class User:
         for x in self.cards:
             whites.remove(x)
             
-#bot pings
+#ping command
 @bot.command(aliases = ["p"])
 async def ping(ctx):
     ping_ = bot.latency
@@ -91,6 +91,7 @@ async def users(ctx):
 @bot.command(aliases = ["h"])
 async def help(ctx):
     embed = discord.Embed(title="Help", color=discord.Color.gold())
+    embed.add_field(name=">start", value="Start the game", inline=False)
     embed.add_field(name=">help", value="Give this help list", inline=False)
     embed.add_field(name=">join", value="Join to the game", inline=False)
     embed.add_field(name=">cards", value="Your current cards", inline=False)
@@ -110,7 +111,7 @@ async def start(ctx):
     black_card = choice(blacks)
     blacks.remove(black_card)
     author=ctx.author
-    #chec if user joined
+    #check if user joined
     if any([x.user == author for x in userlist]):
         messages=[]
         #enumerate users and send the personal vote
@@ -128,27 +129,31 @@ async def start(ctx):
             #add emojies
             for emoji in reactions:
                 await msg.add_reaction(emoji)
-            ##get reaction
+            #get reaction
             messages.append(msg)
+        
         #wait for users
         await asyncio.sleep(5)
-        answers=[]
-        #chech user personal vote
+        
+        #check user personal vote
         for n,msg in enumerate(messages):
             msg = await msg.channel.fetch_message(msg.id)
             msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
             msgreact = max(msg_reactions,key=msg_reactions.get)
             user= userlist[n]
-            user.current_card=user.cards[list(msg_reactions).index(msgreact)]
-            answers.append(black_card.replace('____',user.current_card))
+            replaced=black_card.replace("____",user.cards[list(msg_reactions).index(msgreact)])
+            user.current_card= f"{replaced}"
+
+        #generate the embed what shows the vote ansvers
         for user in userlist:
-            await user.user.send(answers)
+            embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+            for n in range(len(userlist)):
+                embed.add_field(name = f'{userlist[n].name}', value=f"{userlist[n].current_card}", inline=True)
+            embed.set_footer(text="CAH", icon_url=icon)
+            await user.user.send(embed=embed)
 
     else:await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
-    
-        ##todo check for added reaction by user
 
-#todo later
 @bot.command()
 async def scoreboard(ctx):
     pass 

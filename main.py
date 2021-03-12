@@ -97,9 +97,6 @@ async def help(ctx):
     embed.set_footer(text="CAH", icon_url=icon) 
     await ctx.author.send(embed=embed)
 
-
-
-
 #start the game
 @bot.command(aliases = ["s"])
 async def start(ctx):
@@ -113,7 +110,8 @@ async def start(ctx):
     author=ctx.author
     #chec if user joined
     if any([x.user == author for x in userlist]):
-        #enumerate users
+        messages=[]
+        #enumerate users and send the personal vote
         for user in userlist:
 
             embed = discord.Embed(title=black_card,color=discord.Color.gold())
@@ -129,21 +127,20 @@ async def start(ctx):
             for emoji in reactions:
                 await msg.add_reaction(emoji)
             ##get reaction
-            await asyncio.sleep(5)
+            messages.append(msg)
+        #wait for users
+        await asyncio.sleep(5)
+
+        #chech user personal vote
+        for msg in messages:
             msg = await msg.channel.fetch_message(msg.id)
             msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
-            maxifaszi = max(msg_reactions,key=msg_reactions.get)
-            print(maxifaszi)
-            
+            msgreact = max(msg_reactions,key=msg_reactions.get)
+            print(msgreact)
 
-            
-        
     else:await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
     
         ##todo check for added reaction by user
-
-
-        
 
 #todo later
 @bot.command()
@@ -151,4 +148,4 @@ async def scoreboard(ctx):
     pass 
 #todo later
 
-bot.run("")
+bot.run("ODE5Mjc2NTUxODI4NjY4NDc2.YEkQvw.EL7fScmsdRRE8e-Oi8SuI7Sy7ds")

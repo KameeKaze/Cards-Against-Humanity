@@ -160,3 +160,8 @@ iOS developers
 in $O(1)$
 rm -rf /
 sudo
+' or 1=1-- -;
+r/unixporn
+r/linuxmemes
+r/programmerhumor
+root{not_the_flag}

@@ -129,9 +129,6 @@ async def message3(member):
     await member.user.send(embed=embed)
 
     
-    
-
-
 
 #start the game
 @bot.command(aliases = ["s"])
@@ -152,7 +149,7 @@ async def start(ctx):
         answers = await asyncio.gather(*map(message2,messages,userlist))
 
         global embed
-        embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+        embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.blurple())
         
         for user, answer in zip(userlist,answers):
             user= user.name
@@ -160,18 +157,6 @@ async def start(ctx):
             embed.set_footer(text="CAH", icon_url=icon)
         asyncio.gather(*map(message3,userlist))
         
-
-
-
-            #a = user.cards[]
-            #print(a)
-    
-
-
-
-        
-
-
 
     else:
         await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red())) # send warning to join 
@@ -185,56 +170,3 @@ async def scoreboard(ctx):
 
 TOKEN = open("./token.txt",'r').read().replace("\n","")
 bot.run(TOKEN)
-
-
-
-async def isvoted(msg):
-    if all([emoji.count == 1 for emoji in msg.reactions]):
-        return False
-    else:
-        return True
-
-
-'''author=ctx.author
-    #check if user joined
-    if any([x.user == author for x in userlist]):
-        messages=[]
-        #enumerate users and send the personal vote
-        for user in userlist:
-
-            embed = discord.Embed(title=black_card,color=discord.Color.gold())
-            #enumerate user's cards
-            for n,card in enumerate(user.cards):            
-                embed.add_field(name=f"[{n+1}]",value=card, inline=False)
-
-            #send black cards and user's cards
-            embed.set_footer(text="CAH", icon_url=icon)
-            msg = await user.user.send(embed=embed)
-        
-            #add emojies
-            for emoji in reactions:
-                await msg.add_reaction(emoji)
-            #get reaction
-            messages.append(msg)
-        
-        #wait for users
-        await asyncio.sleep(5)
-        #check user personal vote
-        for n,msg in enumerate(messages):
-            msg = await msg.channel.fetch_message(msg.id)
-            msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
-            print(msg.reaction)
-            msgreact = max(msg_reactions,key=msg_reactions.get)
-            user= userlist[n]
-            replaced=black_card.replace("____",user.cards[list(msg_reactions).index(msgreact)])
-            user.current_card= f"{replaced}"
-
-        #generate the embed what shows the vote ansvers
-        for user in userlist:
-            embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
-            for n in range(len(userlist)):
-                embed.add_field(name = f'{userlist[n].name}', value=f"{userlist[n].current_card}", inline=True)
-            embed.set_footer(text="CAH", icon_url=icon)
-            await user.user.send(embed=embed)
-
-'''

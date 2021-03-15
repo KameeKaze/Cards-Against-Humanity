@@ -25,7 +25,6 @@ icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_
 class User:
     score = 0
     current_card= None
-    voted = False
     def __init__(self,cards,name,user):
         self.cards = cards
         self.name = name
@@ -102,43 +101,62 @@ async def help(ctx):
     embed.set_footer(text="CAH", icon_url=icon) 
     await ctx.author.send(embed=embed)
 
+#send message
 async def message(member):
     embed = discord.Embed(title=black_card,color=discord.Color.gold())
     for n,card in enumerate(member.cards):            
         embed.add_field(name=f"[{n+1}]",value=card, inline=False)
     embed.set_footer(text="CAH", icon_url=icon)
-    await reactionadd(await member.user.send(embed=embed))
-    #reactionadd(await member.user.send(embed=embed))
+    return await reactionadd(await member.user.send(embed=embed))
     
-
+#put reactions on the messages
 async def reactionadd(msg):
     for emoji in reactions:
         await msg.add_reaction(emoji)
-
-
+    return msg
+    
+#checks if all users voted
+async def isvoted(msg):
+    msg = await msg.channel.fetch_message(msg.id)
+    return all([x.count == 1 for x in msg.reactions]) # returns true if some users havent voted
+    
 
 #start the game
 @bot.command(aliases = ["s"])
 async def start(ctx):
+    #checks if author is a joined user
     if any([x.user == ctx.author for x in userlist]):
+
         #draw a black card
         global black_card
         black_card = choice(blacks)
         blacks.remove(black_card)
-        asyncio.gather(*map(message,userlist))
+        #send messages to all users
+        messages = await asyncio.gather(*map(message,userlist))
+        # wait for all user's vote
+        while all(await asyncio.gather(*map(isvoted,messages))):
+            pass
+
 
     else:
-        await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
+        await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red())) # send warning to join 
 
-async def asd(member):
-    await member.user.send("mdsjfsdjoi")
-    await asyncio.sleep(5)
+
 
 @bot.command()
 async def scoreboard(ctx):
-    asyncio.gather(*map(asd,userlist))
     pass 
 #todo later
 
 TOKEN = open("./token.txt",'r').read().replace("\n","")
 bot.run(TOKEN)
+
+
+
+async def isvoted(msg):
+    if all([emoji.count == 1 for emoji in msg.reactions]):
+        return False
+    else:
+        return True
+
+

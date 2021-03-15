@@ -107,7 +107,7 @@ async def message(member):
     for n,card in enumerate(member.cards):            
         embed.add_field(name=f"[{n+1}]",value=card, inline=False)
     embed.set_footer(text="CAH", icon_url=icon)
-    return await reactionadd(await member.user.send(embed=embed))
+    return await reactionadd(await member.user.send(embed=embed)) # pass the message to reactionadd function to add reactions to it, then return the message object
     
 #put reactions on the messages
 async def reactionadd(msg):
@@ -118,8 +118,20 @@ async def reactionadd(msg):
 #checks if all users voted
 async def isvoted(msg):
     msg = await msg.channel.fetch_message(msg.id)
-    return all([x.count == 1 for x in msg.reactions]) # returns true if some users havent voted
+    return any([x.count != 1 for x in msg.reactions]) # returns false if users havent voted
     
+async def message2(msg,user):
+    msg = await msg.channel.fetch_message(msg.id)
+    msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
+    return user.cards[reactions.index(max(msg_reactions,key=msg_reactions.get))] # return the user's answer
+
+async def message3(member):
+    await member.user.send(embed=embed)
+
+    
+    
+
+
 
 #start the game
 @bot.command(aliases = ["s"])
@@ -134,8 +146,31 @@ async def start(ctx):
         #send messages to all users
         messages = await asyncio.gather(*map(message,userlist))
         # wait for all user's vote
-        while all(await asyncio.gather(*map(isvoted,messages))):
+        while not all(await asyncio.gather(*map(isvoted,messages))):
             pass
+        # get the users answers
+        answers = await asyncio.gather(*map(message2,messages,userlist))
+
+        global embed
+        embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+        
+        for user, answer in zip(userlist,answers):
+            user= user.name
+            embed.add_field(name = f"{user}",value=black_card.replace("____",answer))
+            embed.set_footer(text="CAH", icon_url=icon)
+        asyncio.gather(*map(message3,userlist))
+        
+
+
+
+            #a = user.cards[]
+            #print(a)
+    
+
+
+
+        
+
 
 
     else:
@@ -160,3 +195,46 @@ async def isvoted(msg):
         return True
 
 
+'''author=ctx.author
+    #check if user joined
+    if any([x.user == author for x in userlist]):
+        messages=[]
+        #enumerate users and send the personal vote
+        for user in userlist:
+
+            embed = discord.Embed(title=black_card,color=discord.Color.gold())
+            #enumerate user's cards
+            for n,card in enumerate(user.cards):            
+                embed.add_field(name=f"[{n+1}]",value=card, inline=False)
+
+            #send black cards and user's cards
+            embed.set_footer(text="CAH", icon_url=icon)
+            msg = await user.user.send(embed=embed)
+        
+            #add emojies
+            for emoji in reactions:
+                await msg.add_reaction(emoji)
+            #get reaction
+            messages.append(msg)
+        
+        #wait for users
+        await asyncio.sleep(5)
+        #check user personal vote
+        for n,msg in enumerate(messages):
+            msg = await msg.channel.fetch_message(msg.id)
+            msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
+            print(msg.reaction)
+            msgreact = max(msg_reactions,key=msg_reactions.get)
+            user= userlist[n]
+            replaced=black_card.replace("____",user.cards[list(msg_reactions).index(msgreact)])
+            user.current_card= f"{replaced}"
+
+        #generate the embed what shows the vote ansvers
+        for user in userlist:
+            embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+            for n in range(len(userlist)):
+                embed.add_field(name = f'{userlist[n].name}', value=f"{userlist[n].current_card}", inline=True)
+            embed.set_footer(text="CAH", icon_url=icon)
+            await user.user.send(embed=embed)
+
+'''

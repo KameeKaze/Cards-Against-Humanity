@@ -25,6 +25,7 @@ icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_
 class User:
     score = 0
     current_card= None
+    voted = False
     def __init__(self,cards,name,user):
         self.cards = cards
         self.name = name
@@ -41,6 +42,7 @@ async def ping(ctx):
     embed.add_field(name=f"{ping}", value="ms")
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.send(embed=embed)
+
 
 #join to the game
 @bot.command(aliases = ["j"])
@@ -100,64 +102,43 @@ async def help(ctx):
     embed.set_footer(text="CAH", icon_url=icon) 
     await ctx.author.send(embed=embed)
 
+async def message(member):
+    embed = discord.Embed(title=black_card,color=discord.Color.gold())
+    for n,card in enumerate(member.cards):            
+        embed.add_field(name=f"[{n+1}]",value=card, inline=False)
+    embed.set_footer(text="CAH", icon_url=icon)
+    await reactionadd(await member.user.send(embed=embed))
+    #reactionadd(await member.user.send(embed=embed))
+    
+
+async def reactionadd(msg):
+    for emoji in reactions:
+        await msg.add_reaction(emoji)
+
+
+
 #start the game
 @bot.command(aliases = ["s"])
 async def start(ctx):
-    def check(reaction, user):
-        print(str(reaction.emoji)+reactions[0],user)
-        return str(reaction.emoji) == reactions[0]
+    if any([x.user == ctx.author for x in userlist]):
+        #draw a black card
+        global black_card
+        black_card = choice(blacks)
+        blacks.remove(black_card)
+        asyncio.gather(*map(message,userlist))
 
-    #draw a black card
-    black_card = choice(blacks)
-    blacks.remove(black_card)
-    author=ctx.author
-    #check if user joined
-    if any([x.user == author for x in userlist]):
-        messages=[]
-        #enumerate users and send the personal vote
-        for user in userlist:
+    else:
+        await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
 
-            embed = discord.Embed(title=black_card,color=discord.Color.gold())
-            #enumerate user's cards
-            for n,card in enumerate(user.cards):            
-                embed.add_field(name=f"[{n+1}]",value=card, inline=False)
-
-            #send black cards and user's cards
-            embed.set_footer(text="CAH", icon_url=icon)
-            msg = await user.user.send(embed=embed)
-        
-            #add emojies
-            for emoji in reactions:
-                await msg.add_reaction(emoji)
-            #get reaction
-            messages.append(msg)
-        
-        #wait for users
-        await asyncio.sleep(5)
-        
-        #check user personal vote
-        for n,msg in enumerate(messages):
-            msg = await msg.channel.fetch_message(msg.id)
-            msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
-            msgreact = max(msg_reactions,key=msg_reactions.get)
-            user= userlist[n]
-            replaced=black_card.replace("____",user.cards[list(msg_reactions).index(msgreact)])
-            user.current_card= f"{replaced}"
-
-        #generate the embed what shows the vote ansvers
-        for user in userlist:
-            embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
-            for n in range(len(userlist)):
-                embed.add_field(name = f'{userlist[n].name}', value=f"{userlist[n].current_card}", inline=True)
-            embed.set_footer(text="CAH", icon_url=icon)
-            await user.user.send(embed=embed)
-
-    else:await author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red()))  
+async def asd(member):
+    await member.user.send("mdsjfsdjoi")
+    await asyncio.sleep(5)
 
 @bot.command()
 async def scoreboard(ctx):
+    asyncio.gather(*map(asd,userlist))
     pass 
 #todo later
 
-TOKEN = open("token.txt",'r').read().replace("\n","")
+TOKEN = open("./token.txt",'r').read().replace("\n","")
 bot.run(TOKEN)

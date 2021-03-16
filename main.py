@@ -19,7 +19,7 @@ whites = [x.replace("\n","") for x in  open("./white.txt").readlines()]
 
 userlist = []
 card_numer = 5
-reactions = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣"] # if you wanna play with more cards, add the emojies
+reactions = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"] # if you wanna play with more cards, add the emojies
 icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_Humanity_logo.png/220px-Cards_Against_Humanity_logo.png"
 
 class User:
@@ -37,7 +37,7 @@ class User:
 async def ping(ctx):
     ping_ = bot.latency
     ping =  round(ping_ * 1000)
-    embed = discord.Embed(title="Ping", value=f"{ping}", color=discord.Color.gold())
+    embed = discord.Embed(title="Ping", value=f"{ping}", color=discord.Color.blurple())
     embed.add_field(name=f"{ping}", value="ms")
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.send(embed=embed)
@@ -57,7 +57,7 @@ async def join(ctx):
         cards = "\n".join(userlist[-1].cards) 
 
         # send join message and cards
-        embed = discord.Embed(title="Wellcome to the game", color=discord.Color.gold())
+        embed = discord.Embed(title="Wellcome to the game", color=discord.Color.blurple())
         embed.add_field(name = 'Your cards:', value=cards, inline=True)
         embed.set_footer(text="CAH", icon_url=icon)
         await author.send(embed=embed)
@@ -74,7 +74,7 @@ async def cards(ctx):
             break
     # get the user's cards and send
     cards = "\n".join(user.cards)
-    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.blurple())
     embed.add_field(name = 'Your cards:', value=cards, inline=True)
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.author.send(embed=embed)
@@ -83,7 +83,7 @@ async def cards(ctx):
 @bot.command(aliases = ["user", "u"])
 async def users(ctx):
     userl="\n".join(x.name for x in userlist)
-    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.gold())
+    embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.blurple())
     embed.add_field(name = 'Users in game:', value=userl, inline=True)
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.author.send(embed=embed)
@@ -91,7 +91,7 @@ async def users(ctx):
 #help menu
 @bot.command(aliases = ["h"])
 async def help(ctx):
-    embed = discord.Embed(title="Help", color=discord.Color.gold())
+    embed = discord.Embed(title="Help", color=discord.Color.blurple())
     embed.add_field(name=">start", value="Start the game", inline=False)
     embed.add_field(name=">help", value="Give this help list", inline=False)
     embed.add_field(name=">join", value="Join to the game", inline=False)
@@ -103,7 +103,7 @@ async def help(ctx):
 
 #send message
 async def message(member):
-    embed = discord.Embed(title=black_card,color=discord.Color.gold())
+    embed = discord.Embed(title=black_card,color=discord.Color.blurple())
     for n,card in enumerate(member.cards):            
         embed.add_field(name=f"[{n+1}]",value=card, inline=False)
     embed.set_footer(text="CAH", icon_url=icon)
@@ -111,7 +111,7 @@ async def message(member):
     
 #put reactions on the messages
 async def reactionadd(msg):
-    for emoji in reactions:
+    for emoji in reactions[:5]:
         await msg.add_reaction(emoji)
     return msg
     
@@ -126,9 +126,22 @@ async def message2(msg,user):
     return user.cards[reactions.index(max(msg_reactions,key=msg_reactions.get))] # return the user's answer
 
 async def message3(member):
-    await member.user.send(embed=embed)
-
+    return await reactionadd2(await member.user.send(embed=embed))
     
+
+async def reactionadd2(msg):
+    for emoji in reactions[:len(userlist)]:
+        await msg.add_reaction(emoji)
+    return msg
+
+
+async def get_winner(msg):
+    msg = await msg.channel.fetch_message(msg.id)
+    msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
+    return(reactions.index(max(msg_reactions,key=msg_reactions.get)))
+
+async def send_winner(user):
+    await user.user.send(embed=embed)
 
 #start the game
 @bot.command(aliases = ["s"])
@@ -155,7 +168,23 @@ async def start(ctx):
             user= user.name
             embed.add_field(name = f"{user}",value=black_card.replace("____",answer))
             embed.set_footer(text="CAH", icon_url=icon)
-        asyncio.gather(*map(message3,userlist))
+        messages = await asyncio.gather(*map(message3,userlist))
+
+        while not all(await asyncio.gather(*map(isvoted,messages))):
+            pass
+        w = await asyncio.gather(*map(get_winner,messages))
+        w = max(set(w), key=w.count)
+        
+        embed = discord.Embed(title="The Winner", color=discord.Color.blurple())
+        embed.add_field(name = f"{userlist[w].name}",value=black_card.replace("____",answers[w]))
+        embed.set_footer(text="CAH", icon_url=icon)
+
+        asyncio.gather(*map(send_winner,userlist))
+
+
+
+        
+
         
 
     else:

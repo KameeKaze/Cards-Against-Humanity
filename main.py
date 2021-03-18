@@ -144,6 +144,7 @@ async def send_winner(user):
 async def generate_new_card(user, answer):
     # delete used cards
     user.cards.remove(answer)
+    whites.remove(answer)
     # give one new card
     new_card = choice(whites)
     user.cards.append(new_card)
@@ -153,6 +154,7 @@ async def generate_new_card(user, answer):
 #start the game
 @bot.command(aliases = ["s"])
 async def start(ctx):
+    global userlist
     #checks if author is a joined user
     if any([x.user == ctx.author for x in userlist]):
 
@@ -190,7 +192,7 @@ async def start(ctx):
 
         userlist = await asyncio.gather(*map(generate_new_card, userlist, answers))
         print("Type:", type(userlist))
-        print(userlist[0])
+        print(userlist[0].cards)
 
     else:
         await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red())) # send warning to join 

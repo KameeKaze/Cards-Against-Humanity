@@ -54,7 +54,7 @@ async def join(ctx):
         userlist.append(User(choices(whites,k=card_numer),author.name,author))
 
         # get the new user's cards
-        cards = "\n".join(userlist[-1].cards) 
+        cards = "\n".join(userlist[-1].cards)
 
         # send join message and cards
         embed = discord.Embed(title="Wellcome to the game", color=discord.Color.blurple())
@@ -119,7 +119,7 @@ async def reactionadd(msg):
 async def isvoted(msg):
     msg = await msg.channel.fetch_message(msg.id)
     return any([x.count != 1 for x in msg.reactions]) # returns false if users havent voted
-    
+
 async def message2(msg,user):
     msg = await msg.channel.fetch_message(msg.id)
     msg_reactions = {emoji.emoji:emoji.count for emoji in msg.reactions}
@@ -127,13 +127,11 @@ async def message2(msg,user):
 
 async def message3(member):
     return await reactionadd2(await member.user.send(embed=embed))
-    
 
 async def reactionadd2(msg):
     for emoji in reactions[:len(userlist)]:
         await msg.add_reaction(emoji)
     return msg
-
 
 async def get_winner(msg):
     msg = await msg.channel.fetch_message(msg.id)
@@ -142,6 +140,15 @@ async def get_winner(msg):
 
 async def send_winner(user):
     await user.user.send(embed=embed)
+
+async def generate_new_card(user, answer):
+    # delete used cards
+    user.cards.remove(answer)
+    # give one new card
+    new_card = choice(whites)
+    user.cards.append(new_card)
+
+    return user
 
 #start the game
 @bot.command(aliases = ["s"])
@@ -181,16 +188,12 @@ async def start(ctx):
 
         asyncio.gather(*map(send_winner,userlist))
 
-
-
-        
-
-        
+        userlist = await asyncio.gather(*map(generate_new_card, userlist, answers))
+        print("Type:", type(userlist))
+        print(userlist[0])
 
     else:
         await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red())) # send warning to join 
-
-
 
 @bot.command()
 async def scoreboard(ctx):

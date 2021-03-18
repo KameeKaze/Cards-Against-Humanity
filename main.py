@@ -23,14 +23,19 @@ reactions = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️�
 icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_Humanity_logo.png/220px-Cards_Against_Humanity_logo.png"
 
 class User:
-    score = 0
     def __init__(self,cards,name,user):
         self.cards = cards
         self.name = name
         self.user = user
+        self.score = 0
         for x in self.cards:
             whites.remove(x)
-            
+    def __str__(self):
+        return self.name+" "+str(self.score)
+    """def __repr__(self):
+        return self.__str__()
+    """
+
 #ping command
 @bot.command(aliases = ["p"])
 async def ping(ctx):
@@ -196,8 +201,19 @@ async def start(ctx):
 
 @bot.command(aliases=['b'])
 async def scoreboard(ctx):
-    scores=[user.score for user in userlist]
-    print(dict(sorted(dict(user.user : user.score for user in userlist),key=lambda item: item[1])))
+    global userlist
+    userlist = sorted(userlist, key=lambda user: user.score, reverse=True)
+    print(userlist)
+    formated_user="\n".join(x.name for x in userlist)
+
+    # send the scoreaboard to all user
+    scores="\n".join(str(x.score) for x in userlist)
+    for user in userlist:
+        embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.blurple())
+        embed.add_field(name='Player:', value=formated_user, inline=True)
+        embed.add_field(name='Score:', value=scores, inline=True)
+        embed.set_footer(text="CAH", icon_url=icon)
+        await user.user.send(embed=embed)
 
 TOKEN = open("./token.txt",'r').read().replace("\n","")
 bot.run(TOKEN)

@@ -144,10 +144,10 @@ async def send_winner(user):
 async def generate_new_card(user, answer):
     # delete used cards
     user.cards.remove(answer)
-    whites.remove(answer)
     # give one new card
     new_card = choice(whites)
     user.cards.append(new_card)
+    whites.remove(new_card)
 
     return user
 
@@ -191,8 +191,6 @@ async def start(ctx):
         asyncio.gather(*map(send_winner,userlist))
 
         userlist = await asyncio.gather(*map(generate_new_card, userlist, answers))
-        print("Type:", type(userlist))
-        print(userlist[0].cards)
 
     else:
         await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red())) # send warning to join 

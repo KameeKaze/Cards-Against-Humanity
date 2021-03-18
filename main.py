@@ -24,7 +24,6 @@ icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cards_Against_
 
 class User:
     score = 0
-    current_card= None
     def __init__(self,cards,name,user):
         self.cards = cards
         self.name = name
@@ -148,7 +147,6 @@ async def generate_new_card(user, answer):
     new_card = choice(whites)
     user.cards.append(new_card)
     whites.remove(new_card)
-
     return user
 
 #start the game
@@ -183,6 +181,7 @@ async def start(ctx):
             pass
         w = await asyncio.gather(*map(get_winner,messages))
         w = max(set(w), key=w.count)
+        userlist[w].score+=1
         
         embed = discord.Embed(title="The Winner", color=discord.Color.blurple())
         embed.add_field(name = f"{userlist[w].name}",value=black_card.replace("____",answers[w]))
@@ -195,10 +194,10 @@ async def start(ctx):
     else:
         await ctx.author.send(embed=discord.Embed(title="You aren't joined. Type: **>join**", color=discord.Color.red())) # send warning to join 
 
-@bot.command()
+@bot.command(aliases=['b'])
 async def scoreboard(ctx):
-    pass 
-#todo later
+    scores=[user.score for user in userlist]
+    print(dict(sorted(dict(user.user : user.score for user in userlist),key=lambda item: item[1])))
 
 TOKEN = open("./token.txt",'r').read().replace("\n","")
 bot.run(TOKEN)

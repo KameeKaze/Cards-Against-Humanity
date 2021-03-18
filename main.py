@@ -32,9 +32,6 @@ class User:
             whites.remove(x)
     def __str__(self):
         return self.name+" "+str(self.score)
-    """def __repr__(self):
-        return self.__str__()
-    """
 
 #ping command
 @bot.command(aliases = ["p"])
@@ -45,7 +42,6 @@ async def ping(ctx):
     embed.add_field(name=f"{ping}", value="ms")
     embed.set_footer(text="CAH", icon_url=icon)
     await ctx.send(embed=embed)
-
 
 #join to the game
 @bot.command(aliases = ["j"])

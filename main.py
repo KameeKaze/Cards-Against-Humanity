@@ -211,34 +211,19 @@ async def start(ctx):
 @bot.command(aliases=['b'])
 async def scoreboard(ctx):
     # make a new variable about the userlist list
-<<<<<<< HEAD
-    global scoreboard_list
-    scoreboard_list = userlist[:]
-    scoreboard_list = sorted(scoreboard_list, key=lambda user: user.score, reverse=True)
-    formated_user="\n".join(x.name for x in scoreboard_list)
-
-    # send the scoreaboard to all user
-    scores="\n".join(str(x.score) for x in scoreboard_list)
-=======
     scoreboard_list = userlist[:]
     scoreboard_list = sorted(scoreboard_list, key=lambda user: user.score, reverse=True)
 
     formated_user="\n".join(x.name for x in scoreboard_list)
     scores="\n".join(str(x.score) for x in scoreboard_list)
     # send the scoreaboard to all user
->>>>>>> ddfb94436ace960f1d88978040aaff3a58de029d
     embed = discord.Embed(title="Cards Against Humanity", color=discord.Color.blurple())
     embed.add_field(name='Player:', value=formated_user, inline=True)
     embed.add_field(name='Score:', value=scores, inline=True)
     embed.set_footer(text="CAH", icon_url=icon)
-<<<<<<< HEAD
-    await ctx.author.send(embed=embed)
-=======
 
     try: await ctx.author.send(embed=embed)
     except : await ctx.user.send(embed=embed)
-
->>>>>>> ddfb94436ace960f1d88978040aaff3a58de029d
 
 TOKEN = open("./token.txt",'r').read().replace("\n","")
 bot.run(TOKEN)

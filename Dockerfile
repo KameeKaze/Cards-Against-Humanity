@@ -9,4 +9,5 @@ WORKDIR /cah
 COPY main.py /cah/
 COPY white.txt /cah/
 COPY black.txt /cah/
+COPY token.txt /cah/
 CMD ["python", "main.py"]
